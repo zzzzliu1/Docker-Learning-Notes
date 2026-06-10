@@ -8,4 +8,7 @@ Docker容器和虚拟机的具体区别如下：
 
 虚拟机的隔离性更强，因为每个虚拟机有完全独立的操作系统，适合运行需要抢隔离的不同类型应用。Docker的隔离性主要依靠Linux内核的命名空间和控制组功能，虽然隔离程度远不如虚拟机，但对于大多数应用场景已经足够。Docker 和虚拟机对比如图所示：
 
-![Docker 和虚拟机对比](../images/1_3_1.png)
+![Docker 和虚拟机对比]
+
+<img width="628" height="355" alt="image" src="https://github.com/user-attachments/assets/cf692dba-f33a-4dd8-b97e-1b4af5e2824c" />
+
