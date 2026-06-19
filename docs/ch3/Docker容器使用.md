@@ -147,4 +147,413 @@ docker rm nginx-container
 > **注意**：如果容器正在运行，直接删除会失败，需要先使用 `docker stop` 停止容器，或者添加 `-f` 参数强制删除运行中的容器。
 
 
+```总结：
+Docker Image（镜像）
+        ↓
+docker run
+        ↓
+Docker Container（容器）
+```
+
+整个完整的生命周期：
+``` text
+创建容器
+    ↓
+启动容器
+    ↓
+查看容器
+    ↓
+进入容器
+    ↓
+停止容器
+    ↓
+重新启动容器
+    ↓
+导出容器（可选）
+    ↓
+删除容器
+
+```
+
+1. 创建容器docker run
+```bash
+docker run [OPTIONS] IMAGE
+```
+
+例如：
+```
+docker run nginx
+```
+
+Docker 会：
+1. 下载nginx镜像
+2. 基于镜像创建容器
+3. 启动容器
+4. 执行镜像中的默认程序
+
+python容器
+``` bash
+docker run -it python:3.13.11-slim
+```
+
+发生了什么：
+```text
+python image
+      ↓
+创建 container
+      ↓
+启动 python REPL
+      ↓
+进入交互模式
+```
+
+#### Docker run 常用参数
+-d
+后台运行
+``` bash
+docker run -d nginx
+```
+效果：
+容器在后台运行
+终端不会被占用
+
+
+-it
+交互模式
+```bash
+docker run -it ubuntu
+```
+
+效果：
+保持终端连接
+进入容器内部
+
+--name
+指定容器名字
+``` bash
+docker run --name my-nginx nginx
+```
+否则Docker 自动生成：
+hungry_einstein
+cool_turing
+这种名字
+
+-p
+端口映射
+```bash
+-p 宿主机端口:容器端口
+```
+例如：
+```
+docker run -p 8080:80 nginx
+```
+
+表示：
+``` text
+浏览器访问：
+
+localhost:8080
+↓
+容器内部：
+80
+```
+
+
+-v
+
+挂载 Volume
+你课程中已经大量使用了。
+例如：
+```
+docker run \
+-v $(pwd)/test:/app/test \
+python:3.13
+```
+意思：
+```
+宿主机目录：
+
+test/
+
+↓
+
+容器目录：
+
+/app/test
+```
+
+这样容器就能读取本机文件。
+
+
+--rm
+容器退出自动删除
+```bash
+docker run --rm hello-world
+```
+执行结束：
+容器自动消失
+
+不留垃圾容器。
+
+
+-e
+环境变量
+你启动PostgreSQL 时已经用过。
+```bash
+docker run \
+-e POSTGRES_USER=root \
+-e POSTGRES_PASSWORD=root \
+postgres
+```
+相当于： 
+给容器内部注入配置
+
+
+
+
+
+3. 查看容器
+
+查看运行中的容器
+``` bash
+docker ps
+```
+
+例如：
+``` text
+CONTAINER ID
+IMAGE
+STATUS
+PORTS
+NAMES
+```
+
+查看所有容器
+```bash
+docker ps -a
+```
+
+4. 停止容器
+
+``` bash
+docker stop 容器名
+```
+
+例如：
+```
+docker stop postgres
+```
+
+
+5. 启动已经停止的容器
+``` bash
+docker start 容器名
+```
+例如：
+```
+docker start postgres
+```
+
+```text
+docker start
+
+启动旧容器
+
+
+docker run
+
+创建新容器
+```
+
+
+6. 进入容器
+``` bash
+docker exec -it 容器名 bash
+```
+
+进入后：
+```
+root@container:/#
+```
+你就在容器里面了
+
+7. 查看日志
+```
+docker logs container_name
+```
+
+例如：
+```
+docker logs postgres
+```
+
+查看：
+```
+数据库启动日志
+```
+
+实时查看
+``` bash
+docker logs -f postgres
+```
+类似：
+``` bash
+tail -f
+```
+
+
+8. 查看容器详情
+Inspect
+``` bash
+docker inspect postgres
+```
+
+
+9. 查看资源使用
+stats
+``` bash
+docker statas
+```
+
+输出：
+```
+CPU
+
+Memory
+
+Network
+
+Disk I/O
+```
+
+10. 导出容器
+``` bash
+docker export postgres > postgres.tar
+```
+
+得到：
+```
+postgres.tar
+```
+
+相当于： 把当前容器文件系统打包
+
+
+
+11. 导入容器
+Import
+``` bash
+docker import postgres.tar my-postgres:v1
+```
+变成：
+```
+my-postgres:v1
+```
+
+
+12. 删除容器
+
+删除单个
+``` bash
+docker rm 容器名
+```
+
+例如：
+``` bash
+docker rm postgres
+```
+
+强制删除
+``` bash
+docker rm -f postgres
+```
+即使运行中也删除。
+
+
+``` text
+# Docker Container 常用命令
+
+## 创建容器
+
+docker run IMAGE
+
+## 后台运行
+
+docker run -d IMAGE
+
+## 指定名称
+
+docker run --name my-container IMAGE
+
+## 端口映射
+
+docker run -p 8080:80 IMAGE
+
+## 挂载目录
+
+docker run -v HOST_DIR:CONTAINER_DIR IMAGE
+
+## 环境变量
+
+docker run -e KEY=VALUE IMAGE
+
+## 自动删除
+
+docker run --rm IMAGE
+
+## 查看运行容器
+
+docker ps
+
+## 查看所有容器
+
+docker ps -a
+
+## 停止容器
+
+docker stop CONTAINER
+
+## 启动容器
+
+docker start CONTAINER
+
+## 进入容器
+
+docker exec -it CONTAINER bash
+
+## 查看日志
+
+docker logs CONTAINER
+
+docker logs -f CONTAINER
+
+## 查看详情
+
+docker inspect CONTAINER
+
+## 查看资源使用
+
+docker stats
+
+## 删除容器
+
+docker rm CONTAINER
+
+docker rm -f CONTAINER
+
+## 导出容器
+
+docker export CONTAINER > container.tar
+
+## 导入镜像
+
+docker import container.tar my-image:v1
+```
+
+
+
+
+
+
+
 
